@@ -1,0 +1,36 @@
+import 'package:injectable/injectable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:bloc/bloc.dart';
+import 'package:urflutter_core/core/errors/errors.dart';
+
+part '{{name.snakeCase()}}_cubit.freezed.dart';
+part '{{name.snakeCase()}}_state.dart';
+
+@injectable
+class {{name.pascalCase()}}Cubit extends Cubit<{{name.pascalCase()}}State> {
+ // final DoSomethingUseCase doSomethingUseCase;
+
+ {{name.pascalCase()}}Cubit(
+  // this.doSomethingUseCase
+  )
+      : super(const {{name.pascalCase()}}State());
+
+// Future<void> doSomething() async {
+//   emit(state.copyWith(isLoading: true, failure: null));
+//   
+//   final result = await doSomethingUseCase(req);
+//   
+//   result.fold(
+//     (failure) => emit(state.copyWith(
+//       isLoading: false,
+//       failure: failure,
+//     )),
+//     (success) => emit(state.copyWith(
+//       isLoading: false,
+//       success: success,
+//     )),
+//   );
+// }
+
+ 
+}

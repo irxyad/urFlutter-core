@@ -1,0 +1,15 @@
+part of '{{name.snakeCase()}}_cubit.dart';
+
+@freezed
+abstract class {{name.pascalCase()}}State with _${{name.pascalCase()}}State {
+  const factory {{name.pascalCase()}}State({
+    @Default(false) bool isLoading,
+    // Object? success,
+    Failure? failure,
+  }) = _{{name.pascalCase()}}State;
+}
+
+extension {{name.pascalCase()}}StateX on {{name.pascalCase()}}State {
+  bool get hasError => failure != null;
+  // bool get hasData => success != null;
+}

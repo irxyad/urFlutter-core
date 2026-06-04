@@ -1,0 +1,39 @@
+import 'package:injectable/injectable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:bloc/bloc.dart';
+import 'package:urflutter_core/core/errors/errors.dart';
+
+part '{{name.snakeCase()}}_bloc.freezed.dart';
+part '{{name.snakeCase()}}_event.dart';
+part '{{name.snakeCase()}}_state.dart';
+
+@injectable
+class {{name.pascalCase()}}Bloc extends Bloc<{{name.pascalCase()}}Event, {{name.pascalCase()}}State> {
+  {{name.pascalCase()}}Bloc(
+    // inject dependency here
+    // this.myUseCase,
+    ) : super(const {{name.pascalCase()}}State()) {
+    // register event handlers here
+
+    //  on<_Event>((event, emit) async {
+    //   emit(state.copyWith(isLoading: true, failure:null));
+
+    //   final result = await myUseCase.call();
+
+    //   result.fold(
+    //     (failure) {
+    //       emit(state.copyWith(isLoading: false, failure: failure));
+
+    //     },
+    //     (success) {
+    //       emit(state.copyWith(isLoading: false, success: success));
+
+    //     },
+    //   );
+    // });
+  }
+
+  // final MyUseCase myUseCase;
+}
+
+

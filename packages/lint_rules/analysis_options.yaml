@@ -1,0 +1,262 @@
+include: package:very_good_analysis/analysis_options.yaml
+
+analyzer:
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
+
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - "**/*.gr.dart"
+    - "build/**"
+    - "**/.dart_tool/**"
+    - "**/generated/**"
+
+  errors:
+    # Treat these as errors instead of warnings
+    invalid_annotation_target: error
+    missing_required_param: error
+    missing_return: error
+    unawaited_futures: error
+
+  plugins:
+    - custom_lint
+
+linter:
+  rules:
+    # SAFETY & BUG PREVENTION
+    always_declare_return_types: true
+    avoid_dynamic_calls: true
+    avoid_null_checks_in_equality_operators: true
+    avoid_type_to_string: true
+    cancel_subscriptions: true
+    close_sinks: true
+    literal_only_boolean_expressions: true
+    test_types_in_equals: true
+    throw_in_finally: true
+    unawaited_futures: true
+    avoid_void_async: true
+    avoid_catching_errors: true
+    no_duplicate_case_values: true
+    valid_regexps: true
+    always_use_package_imports: true
+    avoid_slow_async_io: true
+
+    # IMMUTABILITY & DESIGN
+    prefer_final_fields: true
+    prefer_final_locals: true
+    prefer_final_in_for_each: true
+    prefer_const_constructors: true
+    prefer_const_constructors_in_immutables: true
+    prefer_const_literals_to_create_immutables: true
+    prefer_const_declarations: false
+    unnecessary_late: true
+
+    # READABILITY & MAINTAINABILITY
+    require_trailing_commas: true
+    always_put_required_named_parameters_first: true
+    avoid_positional_boolean_parameters: true
+    cascade_invocations: true
+    no_runtimeType_toString: true
+    one_member_abstracts: false # Sometimes useful for interfaces
+    directives_ordering: true
+    prefer_single_quotes: true
+    sort_pub_dependencies: true
+    avoid_redundant_argument_values: true
+    unnecessary_parenthesis: true
+    use_string_buffers: true
+    use_to_and_as_if_applicable: true
+
+    # FLUTTER-SPECIFIC
+    use_key_in_widget_constructors: true
+    sized_box_for_whitespace: true
+    avoid_unnecessary_containers: true
+    avoid_print: true
+    use_build_context_synchronously: true
+    use_colored_box: true
+    use_decorated_box: true
+    use_full_hex_values_for_flutter_colors: true
+    prefer_relative_imports: false
+    avoid_web_libraries_in_flutter: true
+    use_super_parameters: true # Flutter 3.x feature
+
+    # ARCHITECTURE SAFETY
+    implementation_imports: true
+    depend_on_referenced_packages: true
+    avoid_relative_lib_imports: true
+    no_logic_in_create_state: true
+    avoid_returning_null_for_void: true
+    avoid_catches_without_on_clauses: false
+
+    # DOMAIN LAYER PURITY
+    avoid_classes_with_only_static_members: true
+    avoid_equals_and_hash_code_on_mutable_classes: true
+    avoid_setters_without_getters: true
+    hash_and_equals: true
+
+    # STYLE & NAMING
+    camel_case_types: true
+    camel_case_extensions: true
+    constant_identifier_names: true
+    library_prefixes: true
+    non_constant_identifier_names: true
+    file_names: true
+    library_names: true
+    package_names: true
+
+    # MODERN DART FEATURES
+    prefer_if_null_operators: true
+    prefer_null_aware_operators: true
+    prefer_spread_collections: true
+    prefer_iterable_whereType: true
+    prefer_is_empty: true
+    prefer_is_not_empty: true
+    prefer_contains: true
+    prefer_for_elements_to_map_fromIterable: true
+    prefer_if_elements_to_conditional_expressions: true
+    prefer_inlined_adds: true
+    unnecessary_await_in_return: true
+    unnecessary_null_checks: true
+    unnecessary_nullable_for_final_variable_declarations: true
+
+    # INTENTIONALLY DISABLED
+    public_member_api_docs: false
+    lines_longer_than_80_chars: false
+    document_ignores: false
+    use_setters_to_change_properties: false
+    discarded_futures: false
+    always_specify_types: false # Type inference is good
+    prefer_expression_function_bodies: false # Personal preference
+
+custom_lint:
+  rules:
+    # State Management & Architecture
+    - avoid-global-state
+    - avoid-late-keyword
+    - avoid-non-null-assertion
+    - prefer-async-await
+    - prefer-immediate-return
+    - prefer-commenting-analyzer-ignores
+
+    # Flutter specific
+    - avoid-returning-widgets
+    - avoid-unnecessary-setstate
+    - prefer-extracting-callbacks
+    - prefer-single-widget-per-file:
+        ignore-private-widgets: true
+
+    # Performance
+    - avoid-unnecessary-type-assertions
+    - avoid-unnecessary-type-casts
+    - prefer-const-border-radius
+    - prefer-correct-edge-insets-constructor
+
+    # Code Quality
+    - avoid-banned-imports
+    - avoid-collection-methods-with-unrelated-types
+    - avoid-duplicate-exports
+    - prefer-correct-identifier-length:
+        exceptions: ["id", "db", "i", "j", "e"]
+        max-identifier-length: 30
+        min-identifier-length: 2
+
+dart_code_metrics:
+  extends:
+    - package:dart_code_metrics_presets/all.yaml
+
+  metrics:
+    cyclomatic-complexity: 20
+    maximum-nesting-level: 5
+    number-of-parameters: 5
+    source-lines-of-code: 100
+
+  metrics-exclude:
+    - test/**
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+
+  rules:
+    # Architecture
+    - avoid-nested-conditional-expressions:
+        acceptable-level: 2
+    - avoid-unused-parameters
+    - avoid-throw-in-catch-block
+    - no-boolean-literal-compare
+    - no-empty-block
+    - prefer-conditional-expressions
+    - prefer-match-file-name
+
+    # Flutter Specific
+    - always-remove-listener
+    - avoid-border-all
+    - avoid-returning-widgets:
+        ignored-names:
+          - build
+        ignored-annotations:
+          - widgetFactory
+    - avoid-shrink-wrap-in-lists
+    - avoid-unnecessary-setstate
+    - avoid-wrapping-in-padding
+    - prefer-const-border-radius
+    - prefer-correct-edge-insets-constructor
+    - prefer-single-widget-per-file:
+        ignore-private-widgets: true
+    - prefer-extracting-callbacks:
+        ignored-named-args:
+          - builder
+          - listener
+
+    # Code Organization
+    - member-ordering:
+        order:
+          - public-static-fields
+          - private-static-fields
+          - public-fields
+          - private-fields
+          - constructors
+          - close-method
+          - dispose-method
+          - public-getters
+          - private-getters
+          - public-setters
+          - private-setters
+          - build-method
+          - public-methods
+          - private-methods
+        widgets-order:
+          - constructor
+          - init-state-method
+          - did-change-dependencies-method
+          - did-update-widget-method
+          - dispose-method
+          - build-method
+          - private-methods
+
+    # Formatting & Style
+    - newline-before-return
+    - no-magic-number:
+        allowed: [0, 1, -1, 2, 100]
+    - prefer-trailing-comma
+    - prefer-enums-by-name
+
+    # Performance
+    - avoid-collection-methods-with-unrelated-types
+    - prefer-first
+    - prefer-last
+
+    # Safety
+    - avoid-banned-imports:
+        entries:
+          - paths: [".*"]
+            deny:
+              [
+                "package:flutter/material.dart",
+                "package:flutter/cupertino.dart",
+              ]
+            message: "Use specific imports instead"
+    - avoid-dynamic
+    - avoid-non-null-assertion
+    - avoid-unrelated-type-assertions
+    - format-comment
