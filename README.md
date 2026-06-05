@@ -1,4 +1,4 @@
-# ururFlutter_core
+# urFlutter_core
 
 ## Features
 
@@ -21,7 +21,7 @@
 dependencies:
   urflutter_core:
     git:
-      url: https://github.com/irxyad/urflutter_core.git
+      url: https://github.com/irxyad/urFlutter-core.git
       ref: main
 ```
 
