@@ -1,16 +1,23 @@
 import 'package:mason/mason.dart';
 
 /// Validasi nama fitur
-void validateName(HookContext context) {
-  final name = (context.vars['name'] as String).trim();
+void validateName(HookContext context, {required String label, String? hint}) {
+  final hintTxt = hint == null
+      ? ''
+      : ' ${darkGray.wrap('(without bloc/cubit suffix)') ?? ''}';
 
-  if (name.isEmpty) {
-    throw Exception('Name cannot be empty!');
+  while (true) {
+    final name = context.logger.prompt(label + hintTxt);
+
+    if (name.trim().isEmpty) {
+      context.logger.warn('Name cannot be empty.');
+    } else if (name.contains(' ')) {
+      context.logger.warn(
+        'Name cannot contain spaces. Use snake_case instead.',
+      );
+    } else {
+      context.vars = {...context.vars, 'name': name.trim()};
+      break;
+    }
   }
-
-  if (name.contains(' ')) {
-    throw Exception('Name cannot contain spaces!, use snake_case instead.');
-  }
-
-  context.vars = {...context.vars, 'name': name};
 }

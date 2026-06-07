@@ -25,30 +25,3 @@ environment:
 #  * an optional prompt phrase used when asking for the variable
 #  * a list of values (enums only)
 #  * an optional separator (list only)
-vars:
-  name:
-    type: string
-    description: The base name of the bloc or cubit.
-    default: counter
-    prompt: What is the base name? (without bloc/cubit suffix)
-
-  # bloc_type:
-  #   type: enum
-  #   description: The state management type to generate.
-  #   default: bloc
-  #   prompt: Select the state management type
-  #   values:
-  #     - bloc
-  #     - cubit
-
-  # run_build_runner:
-  #   type: boolean
-  #   description: Run build_runner after generation?
-  #   prompt: Run build_runner after generation?
-  #   default: true
-
-  # output_dir:
-  #   type: string
-  #   description: Generate files in this folder?
-  #   prompt: Paste the correct path where you want to generate (ONLY RELATIVE PATH)?
-  #   default: './lib/features'

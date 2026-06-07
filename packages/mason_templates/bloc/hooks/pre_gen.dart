@@ -12,7 +12,11 @@ import '../models/bloc_config.dart';
 
 Future<void> run(HookContext context) async {
   try {
-    validateName(context);
+    validateName(
+      context,
+      label: 'What is the bloc name? (e.g. auth, home, profile)',
+      hint: 'without bloc/cubit suffix',
+    );
     resolveOutputDir(context);
     _resolveBlocType(context);
     resolveBuildRunner(context);

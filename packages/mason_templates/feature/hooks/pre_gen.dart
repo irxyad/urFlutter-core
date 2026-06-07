@@ -11,7 +11,10 @@ import '../../utils/validate_name_utils.dart';
 
 Future<void> run(HookContext context) async {
   try {
-    validateName(context);
+    validateName(
+      context,
+      label: 'What is the feature name? (e.g. auth, home, profile)',
+    );
     resolveOutputDir(context);
     _resolveGenerateBloc(context);
     resolveBuildRunner(context);
