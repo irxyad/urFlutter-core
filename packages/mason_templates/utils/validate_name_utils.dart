@@ -2,9 +2,7 @@ import 'package:mason/mason.dart';
 
 /// Validasi nama fitur
 void validateName(HookContext context, {required String label, String? hint}) {
-  final hintTxt = hint == null
-      ? ''
-      : ' ${darkGray.wrap('(without bloc/cubit suffix)') ?? ''}';
+  final hintTxt = hint == null ? '' : ' ${darkGray.wrap(hint) ?? ''}';
 
   while (true) {
     final name = context.logger.prompt(label + hintTxt);
