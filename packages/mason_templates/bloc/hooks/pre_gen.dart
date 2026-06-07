@@ -2,25 +2,22 @@ import 'dart:io';
 
 import 'package:mason/mason.dart';
 
-enum BlocType {
-  bloc('bloc'),
-  cubit('cubit');
-
-  final String value;
-  const BlocType(this.value);
-}
+import '../enums/bloc_types.dart';
 
 Future<void> run(HookContext context) async {
+  final outDir = context.vars['output_dir'] as String?;
+
+  if (outDir != null) {
+    context.vars = {...context.vars, 'outputDir': outDir};
+  }
+  _setBlocType(context);
+}
+
+void _setBlocType(HookContext context) {
   try {
-    if (context.vars['validatePath'] == 'No') {
-      throw Exception(
-        'Please open the terminal in the correct folder or use -o <path>.',
-      );
-    }
+    final type = context.vars['bloc_type'] as String;
 
-    final type = context.vars['type'] as String;
-
-    final isValid = BlocType.values.map((e) => e.value).contains(type);
+    final isValid = BlocTypes.values.any((element) => element.value == type);
 
     if (!isValid) {
       throw Exception('$type is not a valid type');
@@ -28,10 +25,11 @@ Future<void> run(HookContext context) async {
 
     context.vars = {
       ...context.vars,
-      'isTypeBloc': type == BlocType.bloc.value,
-      'isTypeCubit': type == BlocType.cubit.value,
+      'isBloc': type == BlocTypes.bloc.value,
+      'isCubit': type == BlocTypes.cubit.value,
     };
-
+    context.logger.info('$type selected');
+    context.logger.info('${context.vars}');
   } catch (e) {
     context.logger.err('Generation Aborted: $e');
     exit(1);

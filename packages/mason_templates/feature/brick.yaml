@@ -28,27 +28,6 @@ environment:
 vars:
   name:
     type: string
-    description: Your name
-    default: Dash
-    prompt: What is your name?
-  
-  validatePath:
-    type: enum
-    description: Ensure the files are generated in the correct folder
-    default: Yes
-    prompt: Is this the correct folder to generate files?
-    values:
-      - Yes
-      - No
-
-  run_build_runner:
-    type: boolean
-    description: Run build_runner after generation?
-    prompt: Run build_runner after generation? (default:No)
-    default: false
-
-  outputDir:
-    type: string
-    description: The output directory for the generated files.
-    default: .
-    prompt: What is the output directory for the generated files?
+    description: Feature name
+    default: testing
+    prompt: What is the feature name?

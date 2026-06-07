@@ -2,79 +2,69 @@ import 'dart:io';
 
 import 'package:mason/mason.dart';
 
+import '../../utils/initial_runner_utils.dart';
+
 Future<void> run(HookContext context) async {
-  await _runDartFormat(context);
-  await _runDartFix(context);
-  await _runBuildBloc(context);
-  if (context.vars['run_build_runner'] as bool) {
-    await _runBuildRunner(context);
-  }
-}
-
-Future<void> _runDartFormat(HookContext context) async {
-  final formatProgress = context.logger.progress('Running "dart format"');
-  await Process.run('dart', ['format', '.']);
-  formatProgress.complete();
-}
-
-Future<void> _runDartFix(HookContext context) async {
-  final formatProgress = context.logger.progress('Running "dart fix --apply"');
-  await Process.run('dart', ['fix', '--apply']);
-  formatProgress.complete();
-}
-
-Future<void> _runBuildRunner(HookContext context) async {
-  final formatProgress = context.logger.progress('Running "build runner"');
-
   try {
-    final result = await Process.run('dart', [
-      'run',
-      'build_runner',
-      'build',
-      '--delete-conflicting-outputs',
-    ]);
+    final generateBloc = context.vars['generate_bloc'] as bool;
+    final outputDir = context.vars['output_dir'] as String;
 
-    // Cek exit code
-    if (result.exitCode != 0) {
-      formatProgress.fail('Build runner failed');
-      context.logger.err('Error: ${result.stderr}');
-      return;
+    // Kalau generate bloc true maka kita skip ini
+    // karena udah dijalankan di brick bloc nya
+    if (!generateBloc) {
+      await addDependencies(context);
+      await runPubGet(context);
+      await runBuildRunner(context);
     }
 
-    // Print output (optional)
-    if (result.stdout.toString().isNotEmpty) {
-      context.logger.info(result.stdout.toString());
-    }
+    await runDartFormat(context, outputDir: outputDir);
+    await runDartFix(context, outputDir: outputDir);
+    await _runBuildBloc(context);
 
-    formatProgress.complete('Build runner completed');
+    context.logger.success('Generated successfully!');
   } catch (e) {
-    formatProgress.fail('Build runner failed');
-    context.logger.err('Exception: $e');
+    context.logger.err('Generation Aborted: $e');
   }
 }
 
+// Kita manggil brick bloc dengan melempar args sesuai yang diminta
 Future<void> _runBuildBloc(HookContext context) async {
-  final formatProgress = context.logger.progress('Creating bloc');
-  final outdir = context.vars['-o'] as String? ?? Directory.current.path;
+  final generateBloc = context.vars['generate_bloc'] as bool;
 
-  try {
-    final result = await Process.run('mason', ['make', 'bloc', '-o', outdir]);
+  if (!generateBloc) return;
 
-    // Cek exit code
-    if (result.exitCode != 0) {
-      formatProgress.fail('Create bloc failed');
-      context.logger.err('Error: ${result.stderr}');
-      return;
-    }
+  final outdir = context.vars['output_dir'] as String;
+  final name = context.vars['name'] as String;
 
-    // Print output (optional)
-    if (result.stdout.toString().isNotEmpty) {
-      context.logger.info(result.stdout.toString());
-    }
+  final args = <String>[
+    '/c',
+    'mason',
+    'make',
+    'bloc',
+    '--name',
+    context.vars['name'].toString(),
+    '--bloc_type',
+    context.vars['bloc_type'].toString(),
+    '--run_build_runner',
+    context.vars['run_build_runner'].toString(),
+    '--output_dir',
+    '${name}_bloc',
+    '-o',
+    '$outdir/$name/presentation/blocs',
+    '--on-conflict',
+    'overwrite',
+  ];
 
-    formatProgress.complete('Create bloc completed');
-  } catch (e) {
-    formatProgress.fail('Create bloc failed');
-    context.logger.err('Exception: $e');
+  final process = await Process.start('cmd', args, runInShell: true);
+
+  await Future.wait([
+    process.stdout.forEach((data) => stdout.add(data)),
+    process.stderr.forEach((data) => stderr.add(data)),
+  ]);
+
+  final exitCode = await process.exitCode;
+
+  if (exitCode != 0) {
+    context.logger.err('Failed to generate bloc with error: ${args.join(' ')}');
   }
 }

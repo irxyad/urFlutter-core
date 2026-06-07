@@ -1,7 +1,8 @@
-import 'package:injectable/injectable.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:bloc/bloc.dart';
-import 'package:urflutter_core/core/errors/errors.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:injectable/injectable.dart';
+import 'package:urflutter_core/core/state/async_state.dart';
+import 'package:urflutter_core/core/logging/logging.dart';
 
 part '{{name.snakeCase()}}_bloc.freezed.dart';
 part '{{name.snakeCase()}}_event.dart';
@@ -9,31 +10,22 @@ part '{{name.snakeCase()}}_state.dart';
 
 @injectable
 class {{name.pascalCase()}}Bloc extends Bloc<{{name.pascalCase()}}Event, {{name.pascalCase()}}State> {
-  {{name.pascalCase()}}Bloc(
-    // inject dependency here
-    // this.myUseCase,
-    ) : super(const {{name.pascalCase()}}State()) {
-    // register event handlers here
+  {{name.pascalCase()}}Bloc() : super(const {{name.pascalCase()}}State()) {
+    on<_Initialized>((event, emit) async {
+      emit(state.copyWith(initialized: const AsyncState.loading()));
 
-    //  on<_Event>((event, emit) async {
-    //   emit(state.copyWith(isLoading: true, failure:null));
-
-    //   final result = await myUseCase.call();
-
-    //   result.fold(
-    //     (failure) {
-    //       emit(state.copyWith(isLoading: false, failure: failure));
-
-    //     },
-    //     (success) {
-    //       emit(state.copyWith(isLoading: false, success: success));
-
-    //     },
-    //   );
-    // });
+      try {
+        emit(
+          state.copyWith(
+            initialized:  AsyncState.done,
+          ),
+        );
+      } catch (e) {
+        AppLogger.e('Error initialized setting', e.toString());
+        
+        emit(state.copyWith(initialized: e.toAsyncError()));
+      }
+    });
   }
-
-  // final MyUseCase myUseCase;
 }
-
 

@@ -30,28 +30,25 @@ vars:
     type: string
     description: The base name of the bloc or cubit.
     default: counter
-    prompt: Enter the base name (without bloc/cubit suffix)
+    prompt: What is the base name? (without bloc/cubit suffix)
 
-  type:
-    type: enum
-    description: The state management type to generate.
-    default: bloc
-    prompt: Select the state management type
-    values:
-      - bloc
-      - cubit
+  # bloc_type:
+  #   type: enum
+  #   description: The state management type to generate.
+  #   default: bloc
+  #   prompt: Select the state management type
+  #   values:
+  #     - bloc
+  #     - cubit
 
-  validatePath:
-    type: enum
-    description: Ensure the files are generated in the correct folder
-    default: Yes
-    prompt: Is this the correct folder to generate files?
-    values:
-      - Yes
-      - No
+  # run_build_runner:
+  #   type: boolean
+  #   description: Run build_runner after generation?
+  #   prompt: Run build_runner after generation?
+  #   default: true
 
-  run_build_runner:
-    type: boolean
-    description: Run build_runner after generation?
-    prompt: Run build_runner after generation? (default:No)
-    default: false
+  # output_dir:
+  #   type: string
+  #   description: Generate files in this folder?
+  #   prompt: Paste the correct path where you want to generate (ONLY RELATIVE PATH)?
+  #   default: './lib/features'

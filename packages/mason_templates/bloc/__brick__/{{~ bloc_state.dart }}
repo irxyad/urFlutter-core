@@ -3,14 +3,10 @@ part of '{{name.snakeCase()}}_bloc.dart';
 @freezed
 abstract class {{name.pascalCase()}}State with _${{name.pascalCase()}}State {
   const factory {{name.pascalCase()}}State({
-    @Default(false) bool isLoading,
-    // @Default(null) Object? success,
-    @Default(null) Failure? failure,
+    @Default(AsyncState.idle()) AsyncState<void> initialized,
   }) = _{{name.pascalCase()}}State;
 }
 
-
 extension {{name.pascalCase()}}StateX on {{name.pascalCase()}}State {
-  bool get hasError => failure != null;
-  // bool get hasData => success != null;
+  bool get isInitialized => initialized.isSuccess;
 }
