@@ -1,29 +1,50 @@
 import 'dart:io';
 
 import 'package:mason/mason.dart';
+import 'package:path/path.dart' as path;
 
+final _dependencies = ['freezed_annotation', 'injectable', 'bloc'];
+
+final _devDependencies = [
+  'freezed',
+  'build_runner',
+  'injectable_generator',
+  'json_serializable',
+];
+
+/// Menambahkan [depedencies] dan [devDependencies] seperti freezed, injectable dll
 Future<void> addDependencies(HookContext context) async {
-  final depedencies = ['freezed_annotation', 'injectable', 'bloc'];
-
-  final devDependencies = [
-    'freezed',
-    'build_runner',
-    'injectable_generator',
-    'json_serializable',
-  ];
-
-  final formatProgress = context.logger.progress(
-    'Adding dependencies (${[...depedencies, ...devDependencies].join(', ')}) ',
+  final progress = context.logger.progress(
+    'Adding dependencies (${[..._dependencies, ..._devDependencies].join(', ')})',
   );
 
-  await Process.run('dart', ['pub', 'add', ...depedencies]);
-  await Process.run('dart', ['pub', 'add', '--dev', ...devDependencies]);
+  try {
+    final results = await Future.wait([
+      Process.run('dart', ['pub', 'add', ..._dependencies], runInShell: true),
+      Process.run('dart', [
+        'pub',
+        'add',
+        '--dev',
+        ..._devDependencies,
+      ], runInShell: true),
+    ]);
 
-  formatProgress.complete();
+    final failed = results.where((r) => r.exitCode != 0);
+
+    if (failed.isNotEmpty) {
+      progress.fail();
+      throw Exception(failed.map((r) => r.stderr.toString()).join('\n'));
+    }
+
+    progress.complete();
+  } catch (e) {
+    progress.fail();
+    rethrow;
+  }
 }
 
 Future<void> runPubGet(HookContext context) async {
-  final formatProgress = context.logger.progress('Running pub get...');
+  final progress = context.logger.progress('Running "flutter pub get"');
 
   try {
     final result = await Process.run(
@@ -33,14 +54,15 @@ Future<void> runPubGet(HookContext context) async {
       runInShell: true,
     );
 
-    if (result.exitCode == 0) {
-      formatProgress.complete();
-    } else {
-      formatProgress.fail();
+    if (result.exitCode != 0) {
+      progress.fail();
+      throw Exception(result.stderr.toString());
     }
+
+    progress.complete();
   } catch (e) {
-    formatProgress.fail();
-    context.logger.err('$e');
+    progress.fail();
+    rethrow;
   }
 }
 
@@ -48,24 +70,76 @@ Future<void> runDartFormat(
   HookContext context, {
   required String outputDir,
 }) async {
-  final formatProgress = context.logger.progress(
+  var projectRoot = Directory.current;
+
+  while (!File('${projectRoot.path}/pubspec.yaml').existsSync()) {
+    projectRoot = projectRoot.parent;
+  }
+
+  final absoluteOutputDir = path.normalize(
+    path.join(projectRoot.path, outputDir),
+  );
+
+  final progress = context.logger.progress(
     'Running "dart format" on $outputDir',
   );
 
-  await Process.run('dart', ['format', outputDir]);
-  formatProgress.complete();
+  try {
+    final result = await Process.run(
+      'dart',
+      ['format', '.'],
+      workingDirectory: absoluteOutputDir,
+      runInShell: true,
+    );
+
+    if (result.exitCode != 0) {
+      progress.fail();
+      throw Exception(result.stderr.toString());
+    }
+
+    progress.complete();
+  } catch (e) {
+    progress.fail();
+    rethrow;
+  }
 }
 
 Future<void> runDartFix(
   HookContext context, {
   required String outputDir,
 }) async {
-  final formatProgress = context.logger.progress(
+  final progress = context.logger.progress(
     'Running "dart fix --apply" on $outputDir',
   );
 
-  await Process.run('dart', ['fix', '--apply', outputDir]);
-  formatProgress.complete();
+  try {
+    var projectRoot = Directory.current;
+
+    while (!File('${projectRoot.path}/pubspec.yaml').existsSync()) {
+      projectRoot = projectRoot.parent;
+    }
+
+    final absoluteOutputDir = path.normalize(
+      path.join(projectRoot.path, outputDir),
+    );
+
+    final result = await Process.run(
+      'dart',
+      ['fix', '--apply', '.'],
+      workingDirectory: absoluteOutputDir,
+      runInShell: true,
+    );
+
+    if (result.exitCode != 0) {
+      progress.fail();
+      throw Exception(result.stderr.toString());
+    }
+
+    progress.complete();
+  } catch (e) {
+    progress.fail();
+    rethrow;
+  }
 }
 
 Future<void> runBuildRunner(HookContext context) async {
@@ -73,29 +147,29 @@ Future<void> runBuildRunner(HookContext context) async {
 
   if (!runBuildRunner) return;
 
-  final formatProgress = context.logger.progress('Running "build runner"');
+  final progress = context.logger.progress('Running "build_runner build"');
 
   try {
-    final result = await Process.run('dart', [
-      'run',
-      'build_runner',
-      'build',
-      '--delete-conflicting-outputs',
-    ]);
+    var projectRoot = Directory.current;
+    while (!File('${projectRoot.path}/pubspec.yaml').existsSync()) {
+      projectRoot = projectRoot.parent;
+    }
+
+    final result = await Process.run(
+      'dart',
+      ['run', 'build_runner', 'build', '--delete-conflicting-outputs'],
+      workingDirectory: projectRoot.path,
+      runInShell: true,
+    );
 
     if (result.exitCode != 0) {
-      formatProgress.fail('Build runner failed');
-      context.logger.err('Error: ${result.stderr}');
-      return;
+      progress.fail();
+      throw Exception(result.stderr.toString());
     }
 
-    if (result.stdout.toString().isNotEmpty) {
-      context.logger.info(result.stdout.toString());
-    }
-
-    formatProgress.complete('Build runner completed');
+    progress.complete();
   } catch (e) {
-    formatProgress.fail('Build runner failed');
-    context.logger.err('Exception: $e');
+    progress.fail();
+    rethrow;
   }
 }

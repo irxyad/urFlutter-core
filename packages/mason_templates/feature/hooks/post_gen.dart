@@ -1,70 +1,87 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:mason/mason.dart';
 
+import '../../bloc/models/bloc_config.dart';
+import '../../utils/error_utils.dart';
 import '../../utils/initial_runner_utils.dart';
 
 Future<void> run(HookContext context) async {
   try {
     final generateBloc = context.vars['generate_bloc'] as bool;
-    final outputDir = context.vars['output_dir'] as String;
+    final name = context.vars['name'] as String;
+    final outputDir = '${context.vars['output_dir'] as String}/$name';
 
-    // Kalau generate bloc true maka kita skip ini
-    // karena udah dijalankan di brick bloc nya
+    // addDependencies, pubGet, buildRunner dijalankan di brick bloc
+    // jika generate_bloc true, jadi skip di sini
     if (!generateBloc) {
       await addDependencies(context);
       await runPubGet(context);
       await runBuildRunner(context);
     }
 
-    await runDartFormat(context, outputDir: outputDir);
-    await runDartFix(context, outputDir: outputDir);
     await _runBuildBloc(context);
+    await runDartFix(context, outputDir: outputDir);
+    await runDartFormat(context, outputDir: outputDir);
 
     context.logger.success('Generated successfully!');
   } catch (e) {
-    context.logger.err('Generation Aborted: $e');
+    context.logger.err('Generation Aborted: ${e.message}');
+    exit(1);
   }
 }
 
-// Kita manggil brick bloc dengan melempar args sesuai yang diminta
 Future<void> _runBuildBloc(HookContext context) async {
   final generateBloc = context.vars['generate_bloc'] as bool;
 
   if (!generateBloc) return;
 
-  final outdir = context.vars['output_dir'] as String;
   final name = context.vars['name'] as String;
+  final outputDir =
+      '${context.vars['output_dir'] as String}/$name/presentation/blocs';
 
-  final args = <String>[
-    '/c',
-    'mason',
-    'make',
-    'bloc',
-    '--name',
-    context.vars['name'].toString(),
-    '--bloc_type',
-    context.vars['bloc_type'].toString(),
-    '--run_build_runner',
-    context.vars['run_build_runner'].toString(),
-    '--output_dir',
-    '${name}_bloc',
-    '-o',
-    '$outdir/$name/presentation/blocs',
-    '--on-conflict',
-    'overwrite',
-  ];
+  final config = BlocConfig(
+    name: name,
+    blocType: context.vars['bloc_type'],
+    runBuildRunner: context.vars['run_build_runner'],
+    outputDir: outputDir,
+    calledFromParent: true,
+  );
 
-  final process = await Process.start('cmd', args, runInShell: true);
+  final configFile = File('.mason_temp_config.json');
+  await configFile.writeAsString(jsonEncode(config.toJson()));
 
-  await Future.wait([
-    process.stdout.forEach((data) => stdout.add(data)),
-    process.stderr.forEach((data) => stderr.add(data)),
-  ]);
+  try {
+    final process = await Process.start('cmd', [
+      '/c',
+      'mason',
+      'make',
+      'bloc',
+      '--config-path',
+      configFile.path,
+      '-o',
+      outputDir,
+      '--on-conflict',
+      'overwrite',
+    ], runInShell: true);
 
-  final exitCode = await process.exitCode;
+    final stderrBuffer = <int>[];
 
-  if (exitCode != 0) {
-    context.logger.err('Failed to generate bloc with error: ${args.join(' ')}');
+    await Future.wait([
+      process.stdout.forEach(stdout.add),
+      process.stderr.forEach((data) {
+        stderr.add(data);
+        stderrBuffer.addAll(data);
+      }),
+    ]);
+
+    final exitCode = await process.exitCode;
+
+    if (exitCode != 0) {
+      throw Exception(utf8.decode(stderrBuffer));
+    }
+  } finally {
+    await configFile.delete();
   }
 }

@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
-import 'package:urflutter_core/core/state/async_state.dart';
 import 'package:urflutter_core/core/logging/logging.dart';
+import 'package:urflutter_core/core/state/async_state.dart';
 
 part '{{name.snakeCase()}}_bloc.freezed.dart';
 part '{{name.snakeCase()}}_event.dart';
@@ -28,4 +28,3 @@ class {{name.pascalCase()}}Bloc extends Bloc<{{name.pascalCase()}}Event, {{name.
     });
   }
 }
-

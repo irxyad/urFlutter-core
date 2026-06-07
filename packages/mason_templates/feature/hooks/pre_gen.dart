@@ -2,91 +2,46 @@ import 'dart:io';
 
 import 'package:mason/mason.dart';
 
-import '../../bloc/enums/bloc_types.dart';
+import '../../utils/bloc_type_utils.dart';
+import '../../utils/build_runner_utils.dart';
 import '../../utils/check_existing_folder_utils.dart';
-import '../../utils/set_output_dir_utils.dart';
+import '../../utils/error_utils.dart';
+import '../../utils/resolve_output_dir_utils.dart';
+import '../../utils/validate_name_utils.dart';
 
 Future<void> run(HookContext context) async {
   try {
-    _validateName(context);
-    setOutputDir(context);
+    validateName(context);
+    resolveOutputDir(context);
+    _resolveGenerateBloc(context);
+    resolveBuildRunner(context);
 
     final outputDir = context.vars['output_dir'] as String;
-    final folderName = '$outputDir/${context.vars['name']}';
-    context.logger.info('Output Directory: $folderName');
-    checkExistingFolder(context, folderName: folderName);
+    final name = context.vars['name'] as String;
+    final folderPath = '$outputDir/$name';
 
-    _promptBuildRunner(context);
-    _promptGenerateBloc(context);
-    _setBlocType(context);
+    checkExistingFolder(context, folderPath: folderPath);
   } catch (e) {
-    context.logger.err('Generation Aborted: $e');
+    context.logger.err('Generation Aborted: ${e.message}');
     exit(1);
   }
 }
 
-/// Ngeset apakah akan generate bloc atau cubit
-void _setBlocType(HookContext context) {
-  final isGenerateBloc = context.vars['generate_bloc'] as bool;
+/// Resolve apakah akan generate bloc dan tipe-nya.
+void _resolveGenerateBloc(HookContext context) {
+  final existing = context.vars['generate_bloc'] as bool?;
 
-  if (!isGenerateBloc) return;
+  final generateBloc =
+      existing ??
+      context.logger.confirm(
+        'Generate a bloc for this feature?',
+        defaultValue: true,
+      );
 
-  final blocType = context.logger.chooseOne(
-    'Select the state management type',
-    choices: [BlocTypes.bloc.value, BlocTypes.cubit.value],
-    defaultValue: BlocTypes.bloc.value,
-  );
+  context.vars = {...context.vars, 'generate_bloc': generateBloc};
 
-  context.vars = {...context.vars, 'bloc_type': blocType};
-}
+  if (!generateBloc) return;
 
-/// Prompt apakah akan run build_runner
-void _promptBuildRunner(HookContext context) {
-  final isRunBuildRunner = context.logger.chooseOne(
-    'Run build_runner after generation?',
-    choices: [true, false],
-    defaultValue: true,
-    display: (choice) {
-      if (choice == true) {
-        return 'Yes';
-      } else {
-        return 'No';
-      }
-    },
-  );
-
-  context.vars = {...context.vars, 'run_build_runner': isRunBuildRunner};
-}
-
-/// Prompt apakah akan generate bloc
-void _promptGenerateBloc(HookContext context) {
-  final isGenerateBloc = context.logger.chooseOne(
-    'Generate a bloc for this feature?',
-    choices: [true, false],
-    defaultValue: true,
-    display: (choice) {
-      if (choice == true) {
-        return 'Yes';
-      } else {
-        return 'No';
-      }
-    },
-  );
-
-  context.vars = {...context.vars, 'generate_bloc': isGenerateBloc};
-}
-
-/// Validasi nama fitur
-void _validateName(HookContext context) {
-  final name = (context.vars['name'] as String).trim();
-
-  if (name.isEmpty) {
-    throw Exception('Name cannot be empty!');
-  }
-
-  if (name.contains(' ')) {
-    throw Exception('Name cannot contain spaces!, use snake_case instead');
-  }
-
-  context.vars = {...context.vars, 'name': name};
+  final blocType = resolveBlocType(context);
+  context.vars = {...context.vars, 'bloc_type': blocType.value};
 }

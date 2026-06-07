@@ -1,15 +1,29 @@
+import 'dart:io';
+
 import 'package:mason/mason.dart';
 
 import '../../utils/initial_runner_utils.dart';
+import '../models/bloc_config.dart';
 
 Future<void> run(HookContext context) async {
-  final outputDir = context.vars['outputDir'] as String;
+  try {
+    final config = BlocConfig.fromContext(context);
+    final isStandalone = !(config.calledFromParent ?? false);
 
-  await addDependencies(context);
-  await runPubGet(context);
-  await runBuildRunner(context);
-  await runDartFix(context, outputDir: outputDir);
-  await runDartFormat(context, outputDir: outputDir);
+    final folderPath = '${config.outputDir}/${config.name}_${config.blocType}';
 
-  context.logger.success('Generated successfully!');
+    await addDependencies(context);
+    await runPubGet(context);
+    await runBuildRunner(context);
+
+    if (isStandalone) {
+      await runDartFix(context, outputDir: folderPath);
+      await runDartFormat(context, outputDir: folderPath);
+    }
+
+    context.logger.success('Generated successfully!');
+  } catch (e) {
+    context.logger.err('Generation Aborted: $e');
+    exit(1);
+  }
 }
