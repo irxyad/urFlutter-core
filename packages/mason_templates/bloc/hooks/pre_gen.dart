@@ -26,7 +26,7 @@ Future<void> run(HookContext context) async {
 
     checkExistingFolder(context, folderPath: folderPath);
   } catch (e) {
-    context.logger.err('Generation Aborted: ${e.message}');
+    context.logger.err('Generation Aborted! ${e.message}');
 
     exit(1);
   }

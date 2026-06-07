@@ -23,7 +23,7 @@ Future<void> run(HookContext context) async {
 
     context.logger.success('Generated successfully!');
   } catch (e) {
-    context.logger.err('Generation Aborted: $e');
+    context.logger.err('Generation Aborted! $e');
     exit(1);
   }
 }

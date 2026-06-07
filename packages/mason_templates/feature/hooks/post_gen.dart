@@ -13,6 +13,22 @@ Future<void> run(HookContext context) async {
     final name = context.vars['name'] as String;
     final outputDir = '${context.vars['output_dir'] as String}/$name';
 
+    final generated = Directory(name);
+    final target = Directory(outputDir);
+
+    if (!generated.existsSync()) {
+      throw Exception('Generated folder "$name" not found.');
+    }
+
+    if (target.existsSync()) {
+      target.deleteSync(recursive: true);
+    }
+
+    await target.parent.create(recursive: true);
+    await generated.rename(target.path);
+
+    context.logger.info('Moved to "$outputDir"');
+
     // addDependencies, pubGet, buildRunner dijalankan di brick bloc
     // jika generate_bloc true, jadi skip di sini
     if (!generateBloc) {
@@ -27,7 +43,7 @@ Future<void> run(HookContext context) async {
 
     context.logger.success('Generated successfully!');
   } catch (e) {
-    context.logger.err('Generation Aborted: ${e.message}');
+    context.logger.err('Generation Aborted! ${e.message}');
     exit(1);
   }
 }
