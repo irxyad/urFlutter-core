@@ -14,6 +14,7 @@ Future<void> run(HookContext context) async {
     validateName(
       context,
       label: 'What is the feature name? (e.g. auth, home, profile)',
+      defaultValue: 'counter',
     );
     resolveOutputDir(context);
     _resolveGenerateBloc(context);

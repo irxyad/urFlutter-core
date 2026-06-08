@@ -6,6 +6,7 @@ import 'package:mason/mason.dart';
 import '../../bloc/models/bloc_config.dart';
 import '../../utils/error_utils.dart';
 import '../../utils/initial_runner_utils.dart';
+import '../../utils/move_generated_folder.dart';
 
 Future<void> run(HookContext context) async {
   try {
@@ -13,23 +14,8 @@ Future<void> run(HookContext context) async {
     final name = context.vars['name'] as String;
     final outputDir = '${context.vars['output_dir'] as String}/$name';
 
-    final generated = Directory(name);
-    final target = Directory(outputDir);
+    await moveGeneratedFolder(context, name: name, outputDir: outputDir);
 
-    if (!generated.existsSync()) {
-      throw Exception('Generated folder "$name" not found.');
-    }
-
-    if (target.existsSync()) {
-      target.deleteSync(recursive: true);
-    }
-
-    await target.parent.create(recursive: true);
-    await generated.rename(target.path);
-
-    context.logger.info('Moved to "$outputDir"');
-
-    // addDependencies, pubGet, buildRunner dijalankan di brick bloc
     // jika generate_bloc true, jadi skip di sini
     if (!generateBloc) {
       await addDependencies(context);
@@ -68,6 +54,8 @@ Future<void> _runBuildBloc(HookContext context) async {
   final configFile = File('.mason_temp_config.json');
   await configFile.writeAsString(jsonEncode(config.toJson()));
 
+  final progress = context.logger.progress('Generating bloc for "$name"');
+
   try {
     final process = await Process.start('cmd', [
       '/c',
@@ -82,20 +70,26 @@ Future<void> _runBuildBloc(HookContext context) async {
       'overwrite',
     ], runInShell: true);
 
+    final stdoutBuffer = <int>[];
     final stderrBuffer = <int>[];
 
     await Future.wait([
-      process.stdout.forEach(stdout.add),
-      process.stderr.forEach((data) {
-        stderr.add(data);
-        stderrBuffer.addAll(data);
-      }),
+      process.stdout.forEach((data) => stdoutBuffer.addAll(data)),
+      process.stderr.forEach((data) => stderrBuffer.addAll(data)),
     ]);
 
     final exitCode = await process.exitCode;
 
     if (exitCode != 0) {
+      progress.fail('Failed to generate bloc');
       throw Exception(utf8.decode(stderrBuffer));
+    }
+
+    progress.complete('Bloc "$name" generated!');
+
+    final output = utf8.decode(stdoutBuffer).trim();
+    if (output.isNotEmpty) {
+      context.logger.info(output);
     }
   } finally {
     await configFile.delete();

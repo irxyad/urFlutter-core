@@ -6,3 +6,4 @@ environment:
 
 dependencies:
   mason: ^0.1.2
+  path: ^1.9.1

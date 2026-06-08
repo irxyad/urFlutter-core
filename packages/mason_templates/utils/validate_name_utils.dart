@@ -1,11 +1,19 @@
 import 'package:mason/mason.dart';
 
 /// Validasi nama fitur
-void validateName(HookContext context, {required String label, String? hint}) {
+void validateName(
+  HookContext context, {
+  required String label,
+  String? hint,
+  String? defaultValue,
+}) {
   final hintTxt = hint == null ? '' : ' ${darkGray.wrap(hint) ?? ''}';
 
   while (true) {
-    final name = context.logger.prompt(label + hintTxt);
+    final name = context.logger.prompt(
+      label + hintTxt,
+      defaultValue: defaultValue,
+    );
 
     if (name.trim().isEmpty) {
       context.logger.warn('Name cannot be empty.');
