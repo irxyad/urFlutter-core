@@ -3,13 +3,13 @@ import 'dart:io';
 import 'package:mason/mason.dart';
 import 'package:path/path.dart' as path;
 
-import '../../utils/bloc_type_utils.dart';
-import '../../utils/directory_utils.dart';
-import '../../utils/error_utils.dart';
-import '../../utils/initial_runner_utils.dart';
-import '../../utils/logger_utils.dart';
-import '../../utils/move_generated_folder.dart';
 import '../models/bloc_config.dart';
+import 'utils/bloc_type_utils.dart';
+import 'utils/directory_utils.dart';
+import 'utils/error_utils.dart';
+import 'utils/initial_runner_utils.dart';
+import 'utils/logger_utils.dart';
+import 'utils/move_generated_folder.dart';
 
 Future<void> run(HookContext context) async {
   try {
