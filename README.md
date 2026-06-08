@@ -1,5 +1,7 @@
 # urFlutter_core
 
+> ⚠️ **Known Issue:** Fetching these bricks directly from Git may cause high memory usage and stuck compilation. Until this is resolved, please clone the repo and reference bricks via local path.
+
 ## Features
 
 | Module | Description |
