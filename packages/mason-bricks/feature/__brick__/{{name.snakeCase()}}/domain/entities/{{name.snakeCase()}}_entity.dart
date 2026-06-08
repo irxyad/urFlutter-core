@@ -1,4 +1,4 @@
-class {{name.pascalCase()}}Entity {
+class {{name.pascalCase()}}void Entity {
   final int id;
   
   const {{name.pascalCase()}}Entity({

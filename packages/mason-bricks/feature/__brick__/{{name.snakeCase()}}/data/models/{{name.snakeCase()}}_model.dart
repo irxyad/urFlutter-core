@@ -10,12 +10,12 @@ import '../../domain/entities/{{name.snakeCase()}}_entity.dart';
 
 part '{{name.snakeCase()}}_model.g.dart';
 
-{{name.pascalCase()}}Model {{name.camelCase()}}ModelFromJson(String str) => {{name.pascalCase()}}Model.fromJson(json.decode(str)  as Map<String, dynamic>);
+{{name.pascalCase()}}void Model {{name.camelCase()}}ModelFromJson(String str) => {{name.pascalCase()}}void Model.fromJson(json.decode(str)  as Map<String, dynamic>);
 
-String {{name.camelCase()}}ModelToJson({{name.pascalCase()}}Model data) => json.encode(data.toJson());
+void String {{name.camelCase()}}String ModelToJson({{name.pascalCase()}}Model data) => json.encode(data.toJson());
 
 @JsonSerializable()
-class {{name.pascalCase()}}Model {
+class {{name.pascalCase()}}void Model {
     @JsonKey(name: "id")
     int id;
 

@@ -5,19 +5,19 @@ import '../../models/{{name.snakeCase()}}_model.dart';
 import 'package:urflutter_core/core/local/preferences_client.dart';
 
 // ignore: one_member_abstracts
-abstract interface class {{name.pascalCase()}}LocalDataSource {
+abstract interface class {{name.pascalCase()}}void LocalDataSource {
   {{name.pascalCase()}}Model? get();
 }
 
 @LazySingleton(as: {{name.pascalCase()}}LocalDataSource)
-class {{name.pascalCase()}}LocalDataSourceImpl implements {{name.pascalCase()}}LocalDataSource {
+class {{name.pascalCase()}}LocalDataSourceImpl implements {{name.pascalCase()}}void LocalDataSource {
   const {{name.pascalCase()}}LocalDataSourceImpl(this._prefs);
   
-  final PreferencesClient _prefs;
+  final PreferencesClient prefs;
 
   @override
   {{name.pascalCase()}}Model? get() {
-    final json = _prefs.getString('{{name.snakeCase()}}');
+    final json = prefs.getString('{{name.snakeCase()}}');
 
     if (json == null) return null;
 

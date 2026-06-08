@@ -7,7 +7,7 @@ import 'package:urflutter_core/core/api/api.dart';
 
 
 @injectable
-class Get{{name.pascalCase()}}UseCase extends UseCase<{{name.pascalCase()}}Entity, String> {
+class Get{{name.pascalCase()}}UseCase extends void UseCase<{{name.pascalCase()}}Entity, String> {
   final {{name.pascalCase()}}Repository _repository;
   const Get{{name.pascalCase()}}UseCase(this._repository);
 
