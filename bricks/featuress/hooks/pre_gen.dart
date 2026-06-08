@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:mason/mason.dart';
 
-import '../../bloc/models/bloc_config.dart';
 import '../../utils/bloc_type_utils.dart';
 import '../../utils/build_runner_utils.dart';
 import '../../utils/check_existing_folder_utils.dart';
@@ -12,25 +11,18 @@ import '../../utils/validate_name_utils.dart';
 
 Future<void> run(HookContext context) async {
   try {
-    final isCalledFromParent =
-        context.vars['called_from_parent'] as bool? ?? false;
-
-    if (!isCalledFromParent) {
-      validateName(
-        context,
-        defaultValue: 'counter',
-        label: 'What is the bloc name? (e.g. auth, home, profile)',
-        hint: 'without bloc/cubit suffix',
-      );
-    }
-
+    validateName(
+      context,
+      label: 'What is the feature name? (e.g. auth, home, profile)',
+      defaultValue: 'counter',
+    );
     resolveOutputDir(context);
-    _resolveBlocType(context);
+    _resolveGenerateBloc(context);
     resolveBuildRunner(context);
 
-    // Semua vars sudah terset, baru parse config
-    final config = BlocConfig.fromContext(context);
-    final folderPath = '${config.outputDir}/${config.name}_${config.blocType}';
+    final outputDir = context.vars['output_dir'] as String;
+    final name = context.vars['name'] as String;
+    final folderPath = '$outputDir/$name';
 
     checkExistingFolder(context, folderPath: folderPath);
   } catch (e) {
@@ -39,25 +31,21 @@ Future<void> run(HookContext context) async {
   }
 }
 
-void _resolveBlocType(HookContext context) {
-  final argBlocType = context.vars['bloc_type'] as String?;
+/// Resolve apakah akan generate bloc dan tipe-nya.
+void _resolveGenerateBloc(HookContext context) {
+  final existing = context.vars['generate_bloc'] as bool?;
 
-  // Jika sudah ada, berarti dipanggil dari parent brick
-  if (argBlocType != null) {
-    final blocType = BlocType.fromString(argBlocType);
-    _setBlocTypeVars(context, blocType);
-    return;
-  }
+  final generateBloc =
+      existing ??
+      context.logger.confirm(
+        'Generate a bloc for this feature?',
+        defaultValue: true,
+      );
+
+  context.vars = {...context.vars, 'generate_bloc': generateBloc};
+
+  if (!generateBloc) return;
 
   final blocType = resolveBlocType(context);
-  _setBlocTypeVars(context, blocType);
-}
-
-void _setBlocTypeVars(HookContext context, BlocType blocType) {
-  context.vars = {
-    ...context.vars,
-    'bloc_type': blocType.value,
-    'isBloc': blocType == BlocType.bloc,
-    'isCubit': blocType == BlocType.cubit,
-  };
+  context.vars = {...context.vars, 'bloc_type': blocType.value};
 }
