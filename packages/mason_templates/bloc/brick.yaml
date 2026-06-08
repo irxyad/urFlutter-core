@@ -25,3 +25,10 @@ environment:
 #  * an optional prompt phrase used when asking for the variable
 #  * a list of values (enums only)
 #  * an optional separator (list only)
+
+vars:
+  name:
+    type: string
+    description: The base name of the bloc or cubit.
+    default: counter
+    prompt: What is the base name? (without bloc/cubit suffix)

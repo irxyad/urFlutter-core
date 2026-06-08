@@ -2,8 +2,6 @@ import 'dart:io';
 
 import 'package:mason/mason.dart';
 
-import 'utils/error_utils.dart';
-
 Future<void> run(HookContext context) async {
   try {
     // if (!isCalledFromParent) {
@@ -26,7 +24,7 @@ Future<void> run(HookContext context) async {
     // checkExistingFolder(context, folderPath: folderPath);
     context.logger.info('TESTING');
   } catch (e) {
-    context.logger.err('Generation Aborted! ${e.message}');
+    context.logger.err('Generation Aborted! $e');
     exit(1);
   }
 }
