@@ -1,6 +1,14 @@
 # urFlutter_core
 
-> ⚠️ **Known Issue:** Fetching these bricks directly from Git may cause high memory usage and stuck compilation. Until this is resolved, please clone the repo and reference bricks via local path.
+A Flutter core package with clean architecture utilities, reusable widgets, and Mason brick templates for code generation.
+
+---
+
+## ⚠️ Known Issue (Mason only)
+
+Fetching bricks directly from Git may cause high memory usage and stuck compilation. Until this is resolved, please clone the repo and reference bricks via local path.
+
+---
 
 ## Features
 
@@ -14,6 +22,38 @@
 | `core/utils` | `AppDimension`, `ColorUtils`, `DirectoryUtils` |
 | `widgets/loading` | Loading overlay via `AppLoading` |
 | `widgets/notification` | Toast/notification via `AppNotify` |
+
+---
+
+## Mason Bricks
+
+| Brick | Description |
+|---|---|
+| `bloc` | Generates BLoC or Cubit with freezed, injectable, and async state |
+| `feature` | Generates full clean architecture feature structure with optional BLoC |
+
+### Usage
+
+**1. Clone**
+```bash
+git clone https://github.com/irxyad/urFlutter-core.git
+```
+
+**2. Add to `mason.yaml`**
+```yaml
+bricks:
+  bloc:
+    path: /path/to/urFlutter-core/packages/mason_templates/bloc
+  feature:
+    path: /path/to/urFlutter-core/packages/mason_templates/feature
+```
+
+**3. Run**
+```bash
+mason get
+mason make bloc
+mason make feature
+```
 
 ---
 
