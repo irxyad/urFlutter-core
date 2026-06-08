@@ -14,6 +14,7 @@ Future<void> run(HookContext context) async {
     validateName(
       context,
       label: 'What is the feature name? (e.g. auth, home, profile)',
+      defaultValue: 'counter',
     );
     resolveOutputDir(context);
     _resolveGenerateBloc(context);
@@ -25,7 +26,7 @@ Future<void> run(HookContext context) async {
 
     checkExistingFolder(context, folderPath: folderPath);
   } catch (e) {
-    context.logger.err('Generation Aborted: ${e.message}');
+    context.logger.err('Generation Aborted! ${e.message}');
     exit(1);
   }
 }

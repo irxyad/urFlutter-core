@@ -7,14 +7,14 @@ class BlocConfig {
   final String blocType;
   final bool runBuildRunner;
   final String outputDir;
-  final bool? calledFromParent;
+  final bool calledFromParent;
 
   BlocConfig({
     required this.name,
     required this.blocType,
     required this.runBuildRunner,
     required this.outputDir,
-    this.calledFromParent,
+    this.calledFromParent = false,
   });
 
   factory BlocConfig.fromContext(HookContext context) {
@@ -23,7 +23,7 @@ class BlocConfig {
       blocType: context.vars['bloc_type'],
       runBuildRunner: context.vars['run_build_runner'],
       outputDir: context.vars['output_dir'],
-      calledFromParent: context.vars['called_from_parent'],
+      calledFromParent: context.vars['called_from_parent'] as bool? ?? false,
     );
   }
 
