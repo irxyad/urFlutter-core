@@ -6,7 +6,7 @@ include: package:flutter_lints/flutter.yaml
 analyzer:
   exclude:
     - mason_templates/**/__brick__/**
+    - bricks/**/__brick__/**
 
 linter:
   rules:
-    - prefer_relative_imports
