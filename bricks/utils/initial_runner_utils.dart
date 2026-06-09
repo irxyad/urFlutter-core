@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:mason/mason.dart';
 import 'package:path/path.dart' as path;
 
+import 'directory_utils.dart';
+
 final _dependencies = ['freezed_annotation', 'injectable', 'bloc'];
 
 final _devDependencies = [
@@ -70,11 +72,7 @@ Future<void> runDartFormat(
   HookContext context, {
   required String outputDir,
 }) async {
-  var projectRoot = Directory.current;
-
-  while (!File('${projectRoot.path}/pubspec.yaml').existsSync()) {
-    projectRoot = projectRoot.parent;
-  }
+  final projectRoot = findProjectRoot();
 
   final absoluteOutputDir = path.normalize(
     path.join(projectRoot.path, outputDir),
@@ -113,11 +111,7 @@ Future<void> runDartFix(
   );
 
   try {
-    var projectRoot = Directory.current;
-
-    while (!File('${projectRoot.path}/pubspec.yaml').existsSync()) {
-      projectRoot = projectRoot.parent;
-    }
+    final projectRoot = findProjectRoot();
 
     final absoluteOutputDir = path.normalize(
       path.join(projectRoot.path, outputDir),
@@ -150,10 +144,7 @@ Future<void> runBuildRunner(HookContext context) async {
   final progress = context.logger.progress('Running "build_runner build"');
 
   try {
-    var projectRoot = Directory.current;
-    while (!File('${projectRoot.path}/pubspec.yaml').existsSync()) {
-      projectRoot = projectRoot.parent;
-    }
+    final projectRoot = findProjectRoot();
 
     final result = await Process.run(
       'dart',
