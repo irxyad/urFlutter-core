@@ -1,0 +1,8 @@
+name: lint_rules
+publish_to: none
+
+environment:
+  sdk: ">=3.10.3 <4.0.0"
+
+dependencies:
+  very_good_analysis: ^10.2.0
