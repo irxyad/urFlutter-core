@@ -6,7 +6,9 @@ A Flutter core package with clean architecture utilities, reusable widgets, and 
 
 ## ⚠️ Known Issue (Mason only)
 
-Fetching bricks directly from Git may cause high memory usage and stuck compilation. Until this is resolved, please clone the repo and reference bricks via local path.
+Fetching bricks directly from Git may cause high memory usage and stuck compilation.
+`pre_gen` hooks work fine, but `post_gen` hooks trigger a DartVM memory leak (up to 14GB RAM usage) and stuck compilation.
+Until this is resolved, please clone the repo and reference bricks via local path.
 
 ---
 
