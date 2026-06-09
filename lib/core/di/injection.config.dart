@@ -15,23 +15,22 @@ import 'package:shared_preferences/shared_preferences.dart' as _i460;
 import 'package:urflutter_core/core/di/app_module.dart' as _i869;
 import 'package:urflutter_core/core/local/preferences_client.dart' as _i378;
 
-extension GetItInjectableX on _i174.GetIt {
-  // initializes the registration of main-scope dependencies inside of GetIt
-  Future<_i174.GetIt> init({
-    String? environment,
-    _i526.EnvironmentFilter? environmentFilter,
-  }) async {
-    final gh = _i526.GetItHelper(this, environment, environmentFilter);
-    final appModule = _$AppModule();
-    await gh.lazySingletonAsync<_i460.SharedPreferences>(
-      () => appModule.sharedPreferences,
-      preResolve: true,
-    );
-    gh.lazySingleton<_i378.PreferencesClient>(
-      () => _i378.PreferencesClient(gh<_i460.SharedPreferences>()),
-    );
-    return this;
-  }
+// initializes the registration of main-scope dependencies inside of GetIt
+Future<_i174.GetIt> initDependencies(
+  _i174.GetIt getIt, {
+  String? environment,
+  _i526.EnvironmentFilter? environmentFilter,
+}) async {
+  final gh = _i526.GetItHelper(getIt, environment, environmentFilter);
+  final appModule = _$AppModule();
+  await gh.lazySingletonAsync<_i460.SharedPreferences>(
+    () => appModule.sharedPreferences,
+    preResolve: true,
+  );
+  gh.lazySingleton<_i378.PreferencesClient>(
+    () => _i378.PreferencesClient(gh<_i460.SharedPreferences>()),
+  );
+  return getIt;
 }
 
 class _$AppModule extends _i869.AppModule {}
