@@ -5,7 +5,7 @@ include: package:flutter_lints/flutter.yaml
 
 analyzer:
   exclude:
-    - packages/mason-bricks/**/__brick__/**
+    - mason-bricks/**/__brick__/**
 
 linter:
   rules:
