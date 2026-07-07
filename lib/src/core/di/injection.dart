@@ -3,5 +3,5 @@ import 'package:injectable/injectable.dart';
 
 final getIt = GetIt.instance;
 
-@InjectableInit.microPackage()
+@InjectableInit.microPackage(externalPackageModulesBefore: [])
 void initMicroPackage() {}
