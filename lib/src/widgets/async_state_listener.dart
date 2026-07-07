@@ -1,0 +1,47 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:urflutter_core/src/core/api/api.dart';
+import 'package:urflutter_core/src/core/state/state.dart';
+import 'package:urflutter_core/src/widgets/loading/loading.dart';
+
+class AsyncStateListener<B extends StateStreamable<S>, S, T>
+    extends StatelessWidget {
+  const AsyncStateListener({
+    super.key,
+    required this.selector,
+    required this.onSuccess,
+    required this.child,
+    this.onFailure,
+  });
+
+  final AsyncState<T> Function(S state) selector;
+  final void Function(BuildContext context, T data) onSuccess;
+  final void Function(BuildContext context, Failure error)? onFailure;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<B, S>(
+      listenWhen: (previous, current) =>
+          selector(previous) != selector(current),
+      listener: (context, state) {
+        final asyncState = selector(state);
+
+        switch (asyncState) {
+          case AsyncState(isLoading: true):
+            AppLoading.show();
+          case AsyncState(isSuccess: true):
+            AppLoading.hide();
+            onSuccess(context, asyncState.data as T);
+          case AsyncState(isFailure: true):
+            AppLoading.hide();
+            final error = asyncState.error!;
+            onFailure?.call(context, error);
+          default:
+            AppLoading.hide();
+        }
+      },
+      child: child,
+    );
+  }
+}
