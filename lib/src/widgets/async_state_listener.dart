@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:urflutter_core/src/core/api/api.dart';
-import 'package:urflutter_core/src/core/state/state.dart';
+import 'package:urflutter_core/src/api/api.dart';
+import 'package:urflutter_core/src/state/state.dart';
 import 'package:urflutter_core/src/widgets/loading/loading.dart';
 
 class AsyncStateListener<B extends StateStreamable<S>, S, T>

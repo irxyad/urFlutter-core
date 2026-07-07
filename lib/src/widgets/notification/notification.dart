@@ -1,6 +1,3 @@
-library;
-
-export 'models/notification_config.dart';
-export 'models/notification_type.dart';
-export 'models/wrapper_config.dart';
-export 'notification_manager.dart' show AppNotify, AppNotifyWrapper;
+export 'models/models.dart';
+export 'notification_card.dart';
+export 'notification_manager.dart';

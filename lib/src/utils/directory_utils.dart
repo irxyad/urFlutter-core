@@ -5,8 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:urflutter_core/src/core/extensions/extensions.dart';
-import 'package:urflutter_core/src/core/logging/logging.dart';
+import 'package:urflutter_core/src/extensions/extensions.dart';
+import 'package:urflutter_core/src/logging/logging.dart';
 
 class DirectoryUtils {
   const DirectoryUtils._();

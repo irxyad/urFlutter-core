@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:urflutter_core/src/core/logging/logging.dart';
+import 'package:urflutter_core/src/logging/logging.dart';
 
 class LoggingInterceptor extends Interceptor {
   final String? loggerName;

@@ -2,8 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:urflutter_core/src/core/api/api.dart';
-import 'package:urflutter_core/src/core/logging/logging.dart';
+import 'package:urflutter_core/src/api/api.dart';
+import 'package:urflutter_core/src/logging/logging.dart';
 import 'package:urflutter_core/src/widgets/loading/loading.dart';
 
 class UrFlutterConfig {

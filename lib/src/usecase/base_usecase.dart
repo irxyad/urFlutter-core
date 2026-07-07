@@ -1,4 +1,4 @@
-import 'package:urflutter_core/src/core/api/api.dart';
+import 'package:urflutter_core/src/api/api.dart';
 
 abstract class UseCase<T, Params> {
   const UseCase();
