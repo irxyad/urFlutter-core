@@ -12,6 +12,12 @@ sealed class ApiResult<T> {
     ApiFailure() => null,
   };
 
+  /// Ambil failure langsung, null kalau success
+  Failure? get failureOrNull => switch (this) {
+    ApiSuccess() => null,
+    ApiFailure(:final failure) => failure,
+  };
+
   R when<R>({
     required R Function(T data) onSuccess,
     required R Function(Failure failure) onFailure,

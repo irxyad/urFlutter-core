@@ -41,6 +41,6 @@ abstract class UseCaseWithProgress<T, Params> {
 
   Future<ApiResult<T>> call(
     Params params, {
-    void Function(double progress)? onProgress,
+    void Function(int, int)? onReceiveProgress,
   });
 }

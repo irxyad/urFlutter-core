@@ -140,6 +140,16 @@ abstract class BaseApiService {
     fromJson: fromJson,
   );
 
+   Future<ApiResult<T>> download<T>({
+    required String path,
+    required String savePath,
+    void Function(int, int)? onReceiveProgress,
+  }) => _execute(
+    useEnvelope: false,
+    request: () =>
+        dio.download(path, savePath, onReceiveProgress: onReceiveProgress),
+  );
+
   Future<ApiResult<T>> _execute<T>({
     required Future<Response<dynamic>> Function() request,
     required bool useEnvelope,
