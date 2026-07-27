@@ -51,8 +51,8 @@ class AppDimension {
   static BorderRadius get borderRadiusSmall =>
       BorderRadius.circular(_radius / 2);
 
-  static Widget get hSpace => SizedBox(width: _spacing);
-  static Widget get vSpace => SizedBox(height: _spacing);
+  static Widget hSpace(double? width) => SizedBox(width: width ?? _spacing);
+  static Widget vSpace(double? height) => SizedBox(height: height ?? _spacing);
   static Widget get hSpaceSmall => SizedBox(width: _spacing / 2);
   static Widget get vSpaceSmall => SizedBox(height: _spacing / 2);
 }
