@@ -15,13 +15,20 @@ class LoadingManager {
   DateTime? _showTime;
   LoadingConfig? _currentConfig;
 
-  void initialize(GlobalKey<NavigatorState> navigatorKey) {
+  void initialize(
+    GlobalKey<NavigatorState> navigatorKey,
+    LoadingConfig? config,
+  ) {
     _overlayManager.initialize(navigatorKey);
+
+    if (config != null) {
+      _currentConfig = config;
+    }
   }
 
   Future<void> show({LoadingConfig? config, BuildContext? context}) async {
-    final loadingConfig = config ?? _getDefaultConfig(context);
-    _currentConfig = loadingConfig;
+    final loadingConfig =
+        config ?? _currentConfig ?? _getDefaultConfig(context);
     _showTime = DateTime.now();
 
     _overlayManager.show(config: loadingConfig);
@@ -39,7 +46,6 @@ class LoadingManager {
 
     _overlayManager.hide();
     _showTime = null;
-    _currentConfig = null;
   }
 
   Future<void> toggle({bool show = true, LoadingConfig? config}) async {
@@ -105,6 +111,5 @@ class LoadingManager {
   void reset() {
     _overlayManager.hide();
     _showTime = null;
-    _currentConfig = null;
   }
 }

@@ -8,6 +8,8 @@ class LoadingConfig {
   final bool showMessage;
   final Color? backgroundColor;
   final Color? indicatorColor;
+  final Color? indicatorSecColor;
+  final Color? indicatorThirdColor;
   final Color? textColor;
   final double? size;
   final LoadingPosition position;
@@ -45,6 +47,8 @@ class LoadingConfig {
     this.customIndicator,
     this.messageStyle,
     this.isCompact = false,
+    this.indicatorSecColor,
+    this.indicatorThirdColor,
   });
 
   LoadingConfig copyWith({

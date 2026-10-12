@@ -71,7 +71,7 @@ class ResponseHandler {
 
       return ApiFailure(
         ParseFailure(
-          message: 'Failed to parse response: $e',
+          message: 'Failed to parse response',
           originalError: e,
           stackTrace: str,
         ),

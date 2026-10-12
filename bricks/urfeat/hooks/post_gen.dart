@@ -61,7 +61,7 @@ Future<void> _runBuildBloc(HookContext context) async {
       '/c',
       'mason',
       'make',
-      'bloc',
+      'urbloc',
       '--config-path',
       configFile.path,
       '-o',

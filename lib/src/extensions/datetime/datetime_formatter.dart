@@ -61,6 +61,37 @@ class DateTimeFormatter {
         '${DateFormat.yMMMd(locale).format(end)}';
   }
 
+  /// Relative time ala "X menit lalu" / "Kemarin, HH:mm" / "d MMM yyyy".
+  /// Saat ini hanya mendukung format Indonesia (id).
+  ///
+  /// | Kondisi                      | Output                  |
+  /// |-------------------------------|--------------------------|
+  /// | < 60 menit                   | "12 menit lalu"          |
+  /// | < 24 jam, hari sama          | "5 jam lalu"             |
+  /// | Kemarin                      | "Kemarin, 17:00"         |
+  /// | Selain itu                   | "30 Jul 2025"            |
+  static String toRelative(DateTime dateTime, {DateTime? now}) {
+    final reference = now ?? DateTime.now();
+    final diff = reference.difference(dateTime);
+
+    if (diff.inMinutes < 60) {
+      final minutes = diff.inMinutes < 1 ? 1 : diff.inMinutes;
+      return '$minutes menit lalu';
+    }
+
+    if (diff.inHours < 24 && reference.day == dateTime.day) {
+      return '${diff.inHours} jam lalu';
+    }
+
+    if (isYesterday(reference, dateTime)) {
+      final hour = dateTime.hour.toString().padLeft(2, '0');
+      final minute = dateTime.minute.toString().padLeft(2, '0');
+      return 'Kemarin, $hour:$minute';
+    }
+
+    return format(dateTime, pattern: 'd MMM yyyy', locale: 'id');
+  }
+
   /// True kalau [date] adalah satu hari kalender sebelum [reference].
   ///
   /// Menggunakan perbandingan kalender (bukan Duration.inDays) supaya

@@ -140,7 +140,7 @@ abstract class BaseApiService {
     fromJson: fromJson,
   );
 
-   Future<ApiResult<T>> download<T>({
+  Future<ApiResult<T>> download<T>({
     required String path,
     required String savePath,
     void Function(int, int)? onReceiveProgress,
@@ -157,6 +157,7 @@ abstract class BaseApiService {
   }) async {
     try {
       final response = await request();
+
       return ResponseHandler.process<T>(
         response: response,
         fromJson: fromJson,

@@ -21,6 +21,12 @@ analyzer:
     missing_return: error
     unawaited_futures: error
 
+  # NOTE: This file is FULL config, meant for CI / pre-commit checks only.
+  # custom_lint runs as a separate analyzer plugin process that requires
+  # files to be saved to disk before it re-analyzes — this is what causes
+  # "must save first" lag in the editor. Use analysis_options_dev.yaml for
+  # local development instead, and run `dart run custom_lint` manually or
+  # in CI to get these rules enforced without editor lag.
   plugins:
     - custom_lint
 

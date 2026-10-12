@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:urflutter_core/src/extensions/animations/animations.dart';
+import 'package:urflutter_core/src/animations/animations.dart';
 
 class NotificationCard extends StatelessWidget {
   final Color backgroundColor;

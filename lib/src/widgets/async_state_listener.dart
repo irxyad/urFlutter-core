@@ -29,16 +29,16 @@ class AsyncStateListener<B extends StateStreamable<S>, S, T>
 
         switch (asyncState) {
           case AsyncState(isLoading: true):
-            AppLoading.show();
+            UrLoading.show();
           case AsyncState(isSuccess: true):
-            AppLoading.hide();
+            UrLoading.hide();
             onSuccess(context, asyncState.data as T);
           case AsyncState(isFailure: true):
-            AppLoading.hide();
+            UrLoading.hide();
             final error = asyncState.error!;
             onFailure?.call(context, error);
           default:
-            AppLoading.hide();
+            UrLoading.hide();
         }
       },
       child: child,

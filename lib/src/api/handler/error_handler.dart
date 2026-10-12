@@ -75,11 +75,40 @@ class ErrorHandler {
   }
 
   static String? _extractMessage(dynamic data) {
-    if (data is Map<String, dynamic>) {
-      return data['message'] as String? ??
-          data['error'] as String? ??
-          data['msg'] as String?;
+    if (data is String) {
+      return data;
     }
+
+    if (data is! Map) {
+      return null;
+    }
+
+    final message = data['message'];
+
+    if (message is String) {
+      return message;
+    }
+
+    final error = data['error'];
+
+    if (error is String) {
+      return error;
+    }
+
+    if (error is Map) {
+      final nestedMessage = error['message'];
+
+      if (nestedMessage is String) {
+        return nestedMessage;
+      }
+    }
+
+    final msg = data['msg'];
+
+    if (msg is String) {
+      return msg;
+    }
+
     return null;
   }
 }

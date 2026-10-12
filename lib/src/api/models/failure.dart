@@ -37,7 +37,7 @@ final class TimeoutFailure extends Failure {
 
 final class ParseFailure extends Failure {
   const ParseFailure({
-    super.message = 'Failed to process the server response.',
+    super.message = 'Failed to process parse response.',
     super.statusCode,
     super.originalError,
     this.stackTrace,
@@ -48,7 +48,7 @@ final class ParseFailure extends Failure {
 
 final class UnauthorizedFailure extends Failure {
   const UnauthorizedFailure({
-    super.message = 'Your session has expired. Please sign in again.',
+    super.message = 'Unauthorized. Please login again.',
     super.statusCode = 401,
     super.originalError,
   });

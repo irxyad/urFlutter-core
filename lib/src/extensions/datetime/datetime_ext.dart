@@ -47,20 +47,20 @@ extension DateTimeLocalized on DateTime {
       DateFormat.yMMMMEEEEd(locale).format(this);
 
   /// "30 Jul 2025" — pass [pattern] untuk override format
-  String toLocalDate(String locale, {String pattern = 'd MMM yyyy'}) =>
+  String toShortDate(String locale, {String pattern = 'd MMM yyyy'}) =>
       DateFormat(pattern, locale).format(this);
 
   /// "17:00" atau "5:00 PM" tergantung locale
-  String toLocalTime(String locale) => DateFormat.Hm(locale).format(this);
+  String toTime(String locale) => DateFormat.Hm(locale).format(this);
 
   /// "Tuesday, 30 July 2025 pukul 17:00"
   /// [timeLabel] bisa diisi dari l10n: `context.tr(LocaleKeys.at)`
   String toFullDateWithTime(String locale, {String timeLabel = 'at'}) =>
-      '${toFullDate(locale)} $timeLabel ${toLocalTime(locale)}';
+      '${toFullDate(locale)} $timeLabel ${toTime(locale)}';
 
   /// "Tuesday 30 | 17:00"
   String toShortDateWithTime(String locale) =>
-      '${DateFormat('EEEE d', locale).format(this)} | ${toLocalTime(locale)}';
+      '${DateFormat('d MMM yyyy', locale).format(this)} | ${toShortDate(locale)}';
 
   /// Smart range ke [end].
   /// - Hari sama → "30 Jul 2025"

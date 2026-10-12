@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
-/// Tambahkan [AppDimension.configure] sebelum [runApp])
+/// Tambahkan [UrDimension.configure] sebelum [runApp])
 /// jika ingin mengganti nilai defaultnya
 ///
 /// ```dart
 /// void main() {
-///   AppDimension.configure(spacing: 16, radius: 8);
+///   UrDimension.configure(spacing: 16, radius: 8);
 ///   runApp(const MyApp());
 /// }
 /// ```
-class AppDimension {
-  const AppDimension._();
+class UrDimension {
+  const UrDimension._();
 
   static const double _defaultSpacing = 20;
   static const double _defaultRadius = 11;

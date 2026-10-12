@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'managers/loading_manager.dart';
 import 'models/loading_config.dart';
 
-class AppLoading {
-  const AppLoading._();
+class UrLoading {
+  const UrLoading._();
 
   static Future<void> show({LoadingConfig? config}) =>
       LoadingManager.instance.show(config: config);
@@ -38,32 +38,8 @@ class AppLoading {
 
   static bool get isShowing => LoadingManager.instance.isShowing;
 
-  /// Init di root widget
-  ///
-  /// ```dart
-  /// AppLoading.initialize(navigatorKey);
-  /// ```
-  /// Penggunaan
-  ///
-  /// ``` dart
-  /// await AppLoading.show();
-  /// await AppLoading.hide();
-  ///
-  /// atau
-  ///
-  /// await AppLoading.show(
-  ///   config: LoadingConfig(
-  ///     type: LoadingType.newtonCradle,
-  ///     message: 'Loading...',
-  ///     minDuration: Duration(milliseconds: 300),
-  ///   ),
-  /// );
-
-  /// Atau jika ingin otomatis show dan hide loading
-  /// await AppLoading.withLoading(
-  ///   function: () => fetchData(),
-  /// );
-  /// ```
-  static void initialize(GlobalKey<NavigatorState> navigatorKey) =>
-      LoadingManager.instance.initialize(navigatorKey);
+  static void initialize(
+    GlobalKey<NavigatorState> navigatorKey, {
+    LoadingConfig? config,
+  }) => LoadingManager.instance.initialize(navigatorKey, config);
 }

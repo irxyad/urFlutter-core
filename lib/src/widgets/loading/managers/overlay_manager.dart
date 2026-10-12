@@ -7,6 +7,8 @@ class OverlayManager {
   OverlayEntry? _currentOverlay;
   GlobalKey<NavigatorState>? _navigatorKey;
 
+  static final isLoading = ValueNotifier<bool>(false);
+
   void initialize(GlobalKey<NavigatorState> navigatorKey) {
     _navigatorKey = navigatorKey;
   }
@@ -37,6 +39,7 @@ class OverlayManager {
       ),
     );
 
+    isLoading.value = true;
     navigatorState.overlay?.insert(_currentOverlay!);
   }
 
@@ -44,6 +47,7 @@ class OverlayManager {
     if (_currentOverlay != null) {
       _currentOverlay?.remove();
       _currentOverlay = null;
+      isLoading.value = false;
     }
   }
 

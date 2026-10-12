@@ -30,7 +30,7 @@ class AuthInterceptor extends Interceptor {
 
       if (token != null && token.isNotEmpty) {
         options.headers[authHeaderKey] =
-            '${tokenPrefix ?? AppConstants.dTokenPrefix} $token';
+            '${tokenPrefix ?? UrConstants.dTokenPrefix} $token';
         AppLogger.d(
           'Auth Interceptor',
           message: 'Token added to request: ${options.path}',

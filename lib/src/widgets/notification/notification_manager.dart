@@ -10,21 +10,21 @@ import 'notification_card.dart';
 
 typedef NotificationDismissedCallback = void Function(ToastificationItem item);
 
-class AppNotifyWrapper extends StatefulWidget {
-  const AppNotifyWrapper({super.key, required this.child, this.config});
+class UrNotifyWrapper extends StatefulWidget {
+  const UrNotifyWrapper({super.key, required this.child, this.config});
 
   final Widget child;
-  final AppNotifyWrapperConfig? config;
+  final UrNotifyWrapperConfig? config;
 
   @override
-  State<AppNotifyWrapper> createState() => _AppNotifyWrapperState();
+  State<UrNotifyWrapper> createState() => _UrNotifyWrapperState();
 }
 
-class _AppNotifyWrapperState extends State<AppNotifyWrapper> {
+class _UrNotifyWrapperState extends State<UrNotifyWrapper> {
   @override
   void initState() {
     super.initState();
-    AppNotify._initialize(
+    UrNotify._initialize(
       defaultTitles: widget.config?.defaultTitles,
       defaultPadding: widget.config?.defaultPadding,
       defaultBorderRadius: widget.config?.defaultBorderRadius,
@@ -44,24 +44,24 @@ class _AppNotifyWrapperState extends State<AppNotifyWrapper> {
   );
 }
 
-/// **PENTING**: [MaterialApp] harus dibungkus dengan ini [AppNotifyWrapper]
+/// **PENTING**: [MaterialApp] harus dibungkus dengan ini [UrNotifyWrapper]
 ///
 /// Contoh:
 /// ```dart
-/// AppNotify.showError('Something went wrong!');
-/// AppNotify.showSuccess(
+/// UrNotify.showError('Something went wrong!');
+/// UrNotify.showSuccess(
 ///   'Data saved successfully',
 ///   duration: Duration(seconds: 5),
 /// );
 ///
 /// Kalau mau custom
-/// AppNotify.show(NotificationConfig(
+/// UrNotify.show(NotificationConfig(
 ///   message: 'Custom message',
 ///   type: NotificationType.info,
 /// ));
 /// ```
-class AppNotify {
-  AppNotify._();
+class UrNotify {
+  UrNotify._();
 
   static final Map<NotificationType, String> _defaultTitlesMap = {
     NotificationType.error: 'Error',
@@ -115,13 +115,13 @@ class AppNotify {
       _isInitialized,
       '\n'
       '═══════════════════════════════════════════════════════════════\n'
-      '  AppNotify Error: AppNotifyWrapper not found!\n'
+      '  UrNotify Error: UrNotifyWrapper not found!\n'
       '═══════════════════════════════════════════════════════════════\n'
       '\n'
-      'You must wrap your app with AppNotifyWrapper before using AppNotify.\n'
+      'You must wrap your app with UrNotifyWrapper before using UrNotify.\n'
       '\n'
       'Example:\n'
-      '  AppNotifyWrapper(\n'
+      '  UrNotifyWrapper(\n'
       '    child: MaterialApp(\n'
       '      home: YourHomePage(),\n'
       '    ),\n'

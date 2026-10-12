@@ -138,7 +138,7 @@ class TokenRefreshInterceptor extends Interceptor {
         headers: {
           ...options.headers,
           'Authorization':
-              '${tokenPrefix ?? AppConstants.dTokenPrefix} $newToken',
+              '${tokenPrefix ?? UrConstants.dTokenPrefix} $newToken',
         },
         extra: {...options.extra, '_isRetry': true},
       ),

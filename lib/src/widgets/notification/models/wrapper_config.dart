@@ -3,11 +3,11 @@ import 'package:toastification/toastification.dart';
 
 import '../notification.dart';
 
-/// Jika ingin mengubah beberapa konfigurasi default dari [AppNotify],
-/// bisa menggunakan [AppNotifyWrapperConfig] yang di init sebelum runApp
+/// Jika ingin mengubah beberapa konfigurasi default dari [UrNotify],
+/// bisa menggunakan [UrNotifyWrapperConfig] yang di init sebelum runApp
 ///
 /// ```dart
-/// AppNotifyWrapperConfig(
+/// UrNotifyWrapperConfig(
 ///   defaultTitles: {
 ///     NotificationType.error: 'Kesalahan',
 ///     NotificationType.success: 'Berhasil',
@@ -19,7 +19,7 @@ import '../notification.dart';
 ///   defaultIconSize: 20,
 /// )
 /// ```
-class AppNotifyWrapperConfig {
+class UrNotifyWrapperConfig {
   final ToastificationConfig? config;
 
   /// Default title.
@@ -37,7 +37,7 @@ class AppNotifyWrapperConfig {
   final TextStyle? titleStyle;
   final TextStyle? messageStyle;
 
-  const AppNotifyWrapperConfig({
+  const UrNotifyWrapperConfig({
     this.config,
     this.defaultTitles,
     this.defaultPadding,
@@ -51,14 +51,14 @@ class AppNotifyWrapperConfig {
          'defaultIconSize must be positive',
        );
 
-  AppNotifyWrapperConfig copyWith({
+  UrNotifyWrapperConfig copyWith({
     ToastificationConfig? config,
     Map<NotificationType, String>? defaultTitles,
     EdgeInsets? defaultPadding,
     BorderRadius? defaultBorderRadius,
     double? defaultIconSize,
   }) {
-    return AppNotifyWrapperConfig(
+    return UrNotifyWrapperConfig(
       config: config ?? this.config,
       defaultTitles: defaultTitles ?? this.defaultTitles,
       defaultPadding: defaultPadding ?? this.defaultPadding,

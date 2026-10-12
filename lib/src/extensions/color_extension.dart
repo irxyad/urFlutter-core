@@ -162,5 +162,7 @@ extension ColorX on Color {
 /// `'#FF5733'.toColor()` jadi  `Color(0xFFFF5733)`
 /// `'FF5733'.toColor()` jadi  `Color(0xFFFF5733)`
 extension HexStringX on String {
-  Color? toColor() => ColorX.fromHex(this);
+  Color toColor() {
+    return Color(int.parse(replaceAll('#', '0xFF')));
+  }
 }

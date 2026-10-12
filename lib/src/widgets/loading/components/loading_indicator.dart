@@ -6,6 +6,8 @@ import '../types/loading_type.dart';
 class LoadingIndicator extends StatelessWidget {
   final LoadingType type;
   final Color? color;
+  final Color? secColor;
+  final Color? thirdColor;
   final double? size;
   final Widget? customIndicator;
 
@@ -15,6 +17,8 @@ class LoadingIndicator extends StatelessWidget {
     this.color,
     this.size,
     this.customIndicator,
+    this.secColor,
+    this.thirdColor,
   });
 
   @override
@@ -77,6 +81,13 @@ class LoadingIndicator extends StatelessWidget {
       case LoadingType.bouncingBall:
         return LoadingAnimationWidget.bouncingBall(
           color: indicatorColor,
+          size: indicatorSize,
+        );
+      case LoadingType.discreteCircle:
+        return LoadingAnimationWidget.discreteCircle(
+          color: indicatorColor,
+          secondRingColor: secColor ?? Colors.teal,
+          thirdRingColor: thirdColor ?? Colors.orange,
           size: indicatorSize,
         );
     }

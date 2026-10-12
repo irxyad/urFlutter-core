@@ -3,8 +3,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:urflutter_core/src/api/api.dart';
+import 'package:urflutter_core/src/configs/image.dart';
 import 'package:urflutter_core/src/logging/logging.dart';
-import 'package:urflutter_core/src/widgets/loading/loading.dart';
+import 'package:urflutter_core/src/styles/colors.dart';
+import 'package:urflutter_core/widgets.dart';
 
 class UrFlutterConfig {
   UrFlutterConfig._();
@@ -12,7 +14,10 @@ class UrFlutterConfig {
   static bool _initialized = false;
 
   static late ApiConfig _apiConfig;
+  static late UrAppColors _appColors;
   static late LogConfig _logConfig;
+  static late ConfigurationImage _configurationImage;
+  static late LoadingConfig _loadingConfig;
   static Future<String?> Function()? tokenProvider;
   static Future<String?> Function()? onRefreshToken;
   static Future<void> Function()? onRefreshFailed;
@@ -27,6 +32,21 @@ class UrFlutterConfig {
   static LogConfig get logConfig {
     _assertInitialized();
     return _logConfig;
+  }
+
+  static UrAppColors get appColors {
+    _assertInitialized();
+    return _appColors;
+  }
+
+  static ConfigurationImage get configurationImage {
+    _assertInitialized();
+    return _configurationImage;
+  }
+
+  static LoadingConfig get loadingConfig {
+    _assertInitialized();
+    return _loadingConfig;
   }
 
   /// Wajib dipanggil sekali sebelum [configureDependencies].
@@ -53,8 +73,11 @@ class UrFlutterConfig {
   /// ```
   static void setup({
     required ApiConfig apiConfig,
+    required UrAppColors appColors,
     required GlobalKey<NavigatorState> navigatorKey,
     LogConfig? logConfig,
+    ConfigurationImage? configurationImage,
+    LoadingConfig? loadingConfig,
     Future<String?> Function()? tokenProvider,
     Future<String?> Function()? onRefreshToken,
     Future<void> Function()? onRefreshFailed,
@@ -76,6 +99,15 @@ class UrFlutterConfig {
           level: kReleaseMode ? Level.off : Level.all,
         );
 
+    _loadingConfig =
+        loadingConfig ??
+        LoadingConfig(
+          type: LoadingType.newtonCradle,
+          message: 'Loading...',
+          showMessage: true,
+          minDuration: const Duration(milliseconds: 300),
+        );
+
     if (envelopeParser != null) {
       ResponseHandler.configure(parser: envelopeParser);
     }
@@ -85,7 +117,10 @@ class UrFlutterConfig {
     UrFlutterConfig.onRefreshToken = onRefreshToken;
     UrFlutterConfig.onRefreshFailed = onRefreshFailed;
     AppLogger.initialize(_logConfig);
-    AppLoading.initialize(navigatorKey);
+    UrLoading.initialize(navigatorKey, config: _loadingConfig);
+
+    _appColors = appColors;
+    _configurationImage = configurationImage ?? ConfigurationImage();
 
     _initialized = true;
   }

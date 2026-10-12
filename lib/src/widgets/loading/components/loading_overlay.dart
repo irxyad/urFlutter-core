@@ -68,6 +68,7 @@ class LoadingOverlay extends StatelessWidget {
       padding:
           config.padding ??
           const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      margin: const EdgeInsets.symmetric(horizontal: 24),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(config.borderRadius ?? 12),
@@ -88,17 +89,20 @@ class LoadingOverlay extends StatelessWidget {
   }
 
   Widget _buildContent(BuildContext context) {
+    final loadingIndicator = LoadingIndicator(
+      type: config.type,
+      color: config.indicatorColor,
+      secColor: config.indicatorSecColor,
+      thirdColor: config.indicatorThirdColor,
+      customIndicator: config.customIndicator,
+      size: config.size,
+    );
+
     if (config.showMessage && config.message != null) {
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          LoadingIndicator(
-            type: config.type,
-            color:
-                config.indicatorColor ??
-                Theme.of(context).colorScheme.onSurface,
-            size: config.size,
-          ),
+          loadingIndicator,
           const SizedBox(width: 12),
           Flexible(
             child: Text(
@@ -114,10 +118,6 @@ class LoadingOverlay extends StatelessWidget {
       );
     }
 
-    return LoadingIndicator(
-      type: config.type,
-      color: config.indicatorColor ?? Theme.of(context).colorScheme.onSurface,
-      size: config.size,
-    );
+    return loadingIndicator;
   }
 }

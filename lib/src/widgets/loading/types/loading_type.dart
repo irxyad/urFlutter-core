@@ -6,12 +6,14 @@ enum LoadingType {
   waveDots,
   pulse,
   spinner,
-  bouncingBall;
+  bouncingBall,
+  discreteCircle;
 
   double get defaultSize {
     switch (this) {
       case LoadingType.circular:
       case LoadingType.pulse:
+      case LoadingType.discreteCircle:
         return 24.0;
       case LoadingType.linear:
         return 4.0;
