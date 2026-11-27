@@ -123,7 +123,7 @@ class _UrRadioCard<T> extends StatelessWidget {
                         option.label,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.bodyLarge?.copyWith(
+                        style: theme.textTheme.bodyMedium?.copyWith(
                           color: selected ? scheme.primary : scheme.onSurface,
                           fontWeight: selected
                               ? FontWeight.w600
