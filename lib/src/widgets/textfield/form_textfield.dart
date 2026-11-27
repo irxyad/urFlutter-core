@@ -14,6 +14,7 @@ class UrFormTextField extends StatefulWidget {
     required this.name,
     super.key,
     this.label,
+    this.subtitle,
     this.hintText,
     this.controller,
     this.enabled = true,
@@ -54,6 +55,7 @@ class UrFormTextField extends StatefulWidget {
   final String? label;
   final String? hintText;
   final String? errorTextValidator;
+  final String? subtitle;
   final int hintMaxLines;
 
   final bool enabled;
@@ -115,7 +117,8 @@ class _UrFormTextFieldState extends State<UrFormTextField> {
             widget.label!,
             widget.isRequired && widget.showRequiredAsterisk,
             widget.enabled ? widget.labelColor : UrColors.darkGray,
-            widget.labelStyle,
+            textStyle: widget.labelStyle ?? context.textTheme.titleMedium,
+            subtitle: widget.subtitle,
           ),
         FormBuilderTextField(
           name: widget.name,
@@ -130,14 +133,7 @@ class _UrFormTextFieldState extends State<UrFormTextField> {
           keyboardType: widget.keyboardType,
           textInputAction: widget.textInputAction,
           errorBuilder: (context, errorText) => Container(
-            // decoration: BoxDecoration(
-            //   color: widget.errorColor ?? UrColors.red,
-            //   borderRadius: BorderRadius.circular(999),
-            // ),
             margin: const EdgeInsets.only(top: 8),
-            // padding:
-            //     widget.contentPadding ??
-            //     const EdgeInsets.symmetric(horizontal: 16, vertical: 3),
             child: Row(
               spacing: 5,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -160,7 +156,7 @@ class _UrFormTextFieldState extends State<UrFormTextField> {
           ),
           onTap: widget.isLoading ? null : widget.onTap,
           onChanged: widget.onChanged,
-          onEditingComplete: widget.onEditingCompleted,
+          onEditingComplete: _handleEditingComplete,
           onTapOutside: (v) {
             FocusManager.instance.primaryFocus?.unfocus();
 
@@ -175,6 +171,19 @@ class _UrFormTextFieldState extends State<UrFormTextField> {
     );
   }
 
+  void _handleEditingComplete() {
+    if (widget.onEditingCompleted != null) {
+      widget.onEditingCompleted!.call();
+      return;
+    }
+
+    if (widget.textInputAction == TextInputAction.next) {
+      FocusScope.of(context).nextFocus();
+    } else {
+      FocusManager.instance.primaryFocus?.unfocus();
+    }
+  }
+
   List<TextInputFormatter>? get _inputFormatters {
     if (widget.keyboardType == TextInputType.number) {
       return [
@@ -182,6 +191,7 @@ class _UrFormTextFieldState extends State<UrFormTextField> {
         ...?widget.inputFormatters,
       ];
     }
+
     return widget.inputFormatters;
   }
 
@@ -200,6 +210,7 @@ class _UrFormTextFieldState extends State<UrFormTextField> {
               !RegexValidation.isValidNumber(value)) {
             return errorText ?? 'Invalid number';
           }
+
           return null;
         },
 
@@ -298,31 +309,44 @@ class _UrFormTextFieldState extends State<UrFormTextField> {
 }
 
 class _Label extends StatelessWidget {
-  const _Label(this.text, this.isRequired, this.color, this.textStyle);
+  const _Label(
+    this.text,
+    this.isRequired,
+    this.color, {
+    this.textStyle,
+    this.subtitle,
+  });
 
   final String text;
+  final String? subtitle;
   final bool isRequired;
   final Color? color;
   final TextStyle? textStyle;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
+    final style =
+        textStyle ?? context.textTheme.bodyMedium!.copyWith(color: color);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          text,
-          style:
-              textStyle ?? context.textTheme.bodyMedium?.copyWith(color: color),
-        ),
-        if (isRequired)
-          Padding(
-            padding: const EdgeInsets.only(left: 2),
-            child: Text(
-              '*',
-              style: (textStyle ?? context.textTheme.bodyMedium)?.copyWith(
-                color: Colors.red,
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(text, style: style),
+            if (isRequired)
+              Padding(
+                padding: const EdgeInsets.only(left: 2),
+                child: Text('*', style: style.copyWith(color: Colors.red)),
               ),
+          ],
+        ),
+        if (subtitle != null)
+          Text(
+            subtitle!,
+            style: context.textTheme.bodySmall?.copyWith(
+              color: UrColors.darkGray,
             ),
           ),
       ],

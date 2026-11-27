@@ -14,7 +14,7 @@ class UrDimension {
 
   static const double _defaultSpacing = 20;
   static const double _defaultRadius = 11;
-  static const double _defaultButtonHeight = 38;
+  static const double _defaultButtonHeight = 56;
 
   static double _spacing = _defaultSpacing;
   static double _radius = _defaultRadius;

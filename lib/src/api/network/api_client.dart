@@ -26,6 +26,7 @@ class ApiClient {
           'Accept': 'application/json',
           ...config.defaultHeaders,
         },
+        queryParameters: config.defaultQueryParameters,
       ),
     );
 

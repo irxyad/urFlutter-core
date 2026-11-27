@@ -42,11 +42,9 @@ class DateTimeUtils {
 
     final lastDayOfMonth = DateTime(year, month + 1, 0).day;
 
-    if (date.day > lastDayOfMonth) {
-      return DateTime(year, month + 1, 1);
-    }
+    final day = date.day > lastDayOfMonth ? lastDayOfMonth : date.day;
 
-    return DateTime(year, month, date.day);
+    return DateTime(year, month, day);
   }
 
   /// Menghitung durasi antara dua tanggal dalam unit terbesar yang sesuai.

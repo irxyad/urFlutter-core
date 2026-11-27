@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:urflutter_core/src/extensions/context_extension.dart';
+import 'package:urflutter_core/src/styles/styles.dart';
 import 'package:urflutter_core/src/utils/app_dimension.dart';
 import 'package:urflutter_core/src/widgets/textfield/enums/show_border_type.dart';
 
@@ -7,6 +8,7 @@ class UrTextField extends StatelessWidget {
   const UrTextField({
     super.key,
     this.label,
+    this.subtitle,
     this.hintText,
     this.showBorder = ShowBorderType.none,
     this.prefixIcon,
@@ -34,6 +36,7 @@ class UrTextField extends StatelessWidget {
 
   final String? label;
   final String? hintText;
+  final String? subtitle;
 
   final ShowBorderType showBorder;
   final Widget? prefixIcon;
@@ -79,6 +82,7 @@ class UrTextField extends StatelessWidget {
             false,
             labelColor ?? context.colorScheme.onSurface,
             textStyle: labelStyle ?? context.textTheme.titleMedium,
+            subtitle: subtitle,
           ),
         TextField(
           controller: controller,
@@ -125,9 +129,16 @@ class UrTextField extends StatelessWidget {
 }
 
 class _Label extends StatelessWidget {
-  const _Label(this.text, this.isRequired, this.color, {this.textStyle});
+  const _Label(
+    this.text,
+    this.isRequired,
+    this.color, {
+    this.textStyle,
+    this.subtitle,
+  });
 
   final String text;
+  final String? subtitle;
   final bool isRequired;
   final Color? color;
   final TextStyle? textStyle;
@@ -137,14 +148,26 @@ class _Label extends StatelessWidget {
     final style =
         textStyle ?? context.textTheme.bodyMedium!.copyWith(color: color);
 
-    return Row(
-      mainAxisSize: MainAxisSize.min,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(text, style: style),
-        if (isRequired)
-          Padding(
-            padding: const EdgeInsets.only(left: 2),
-            child: Text('*', style: style.copyWith(color: Colors.red)),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(text, style: style),
+            if (isRequired)
+              Padding(
+                padding: const EdgeInsets.only(left: 2),
+                child: Text('*', style: style.copyWith(color: Colors.red)),
+              ),
+          ],
+        ),
+        if (subtitle != null)
+          Text(
+            subtitle!,
+            style: context.textTheme.bodySmall?.copyWith(
+              color: UrColors.darkGray,
+            ),
           ),
       ],
     );

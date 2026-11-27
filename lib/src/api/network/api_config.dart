@@ -10,6 +10,7 @@ class ApiConfig {
   /// Timeout kirim data ke server (default 30 detik)
   final Duration sendTimeout;
   final Map<String, String> defaultHeaders;
+  final Map<String, String> defaultQueryParameters;
   final bool enableLogging;
 
   /// List endpoint yang tidak akan mengirim token
@@ -31,6 +32,7 @@ class ApiConfig {
     this.receiveTimeout = const Duration(seconds: 30),
     this.sendTimeout = const Duration(seconds: 30),
     this.defaultHeaders = const {},
+    this.defaultQueryParameters = const {},
     this.enableLogging = false,
     this.excludeTokenPaths = const [],
     this.excludeRefreshTokenPaths = const [],
